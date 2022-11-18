@@ -1,0 +1,27 @@
+const MESSAGES = {
+  PERMISSION_DENIED: "Permission Denied",
+  EMAIL_NOT_VALID: "Email not valid",
+  PASSWORD_MIN_CHAR: "Password should have a minimum of 6 characters",
+  USER_CREATE_FAILURE: "Cannot create a User",
+  USER_CREATE_SUCCESS: "User Created Successfully",
+  USER_NOT_EXISTS: "User does not exist",
+  INVALID_CREDENTIALS: "Invalid Credentials",
+  USER_ID_NOT_VALID: "User ID is not Valid",
+  USER_NOT_FOUND: "User not found",
+  USER_FOUND: "User Found",
+  AUTH_TOKEN_UNDEFINED: "Auth Token passed is undefined",
+  AUTH_TOKEN_INVALID: "Auth token is invalid",
+  UNABLE_FETCH_USER: "Unable to fetch user",
+  CREATE_USER_FAILURE: "Unable to create user",
+  ACTIVATE_WALLET_FAILURE: "Unable to activate wallet",
+  ACTIVATE_WALLET_SUCCESS: "Wallet Activated Successfully",
+  ADD_MONEY_SUCCESS: "Amount Added Successfully",
+  ADD_MONEY_FAILURE: "Unable to Add Amount",
+  STOCK_CREATE_FAILURE: "Unable to create Stock",
+  STOCK_CREATE_SUCCESS: "Stock created Successfully",
+  STOCK_NOT_FOUND: "Stock not found",
+  STOCK_FOUND: "Stock Found",
+  STOCK_PURCHASE_FAILED: "Cannot purchase stock",
+};
+
+module.exports = { MESSAGES };
