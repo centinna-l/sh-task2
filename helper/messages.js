@@ -15,13 +15,15 @@ const MESSAGES = {
   CREATE_USER_FAILURE: "Unable to create user",
   ACTIVATE_WALLET_FAILURE: "Unable to activate wallet",
   ACTIVATE_WALLET_SUCCESS: "Wallet Activated Successfully",
-  ADD_MONEY_SUCCESS: "Amount Added Successfully",
-  ADD_MONEY_FAILURE: "Unable to Add Amount",
+  UPDATE_MONEY_SUCCESS: "Amount updated Successfully",
+  UPDATE_MONEY_FAILURE: "Unable to update Amount",
   STOCK_CREATE_FAILURE: "Unable to create Stock",
   STOCK_CREATE_SUCCESS: "Stock created Successfully",
   STOCK_NOT_FOUND: "Stock not found",
   STOCK_FOUND: "Stock Found",
   STOCK_PURCHASE_FAILED: "Cannot purchase stock",
+  AMOUNT_INVALID: "Please enter a valid amount",
+  FETCH_WALLET_FAILED: "Unable to fetch wallet",
 };
 
 module.exports = { MESSAGES };

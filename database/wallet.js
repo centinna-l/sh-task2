@@ -36,9 +36,16 @@ const fetchWalletDetailsDB = async (user_id) => {
 
 const updateWalletMoneyDB = async (user_id, amount) => {
   try {
+    let fetchWallet = await fetchWalletDetailsDB(user_id);
+    if (!fetchWallet.status) {
+      return { status: false, error: MESSAGES.FETCH_WALLET_FAILED };
+    }
+    if (parseFloat(amount) + fetchWallet.data.wallet < 0) {
+      return { status: false, error: MESSAGES.AMOUNT_INVALID };
+    }
     let result = await Wallet.findOneAndUpdate(
       { user_id },
-      { $inc: { wallet: amount } }
+      { $inc: { wallet: parseFloat(amount).toFixed(2) } }
     );
     if (!result) {
       return { status: false, error: MESSAGES.ADD_MONEY_FAILURE };

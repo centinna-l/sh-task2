@@ -1,7 +1,7 @@
 const {
   activateWalletDB,
   fetchWalletDetailsDB,
-  addMoneyDB,
+  updateWalletMoneyDB,
 } = require("../database/wallet");
 const { MESSAGES } = require("../helper/messages");
 
@@ -12,7 +12,10 @@ const activateWallet = async (req, res, next) => {
     if (!result.status) {
       return next(Error(result.error));
     }
-    return res.status.json({ message: MESSAGES.ACTIVATE_WALLET_SUCCESS });
+    if (result.data) {
+      return res.status(200).json({ data: result.data });
+    }
+    return res.status(200).json({ message: MESSAGES.ACTIVATE_WALLET_SUCCESS });
   } catch (error) {
     return next(Error(error.message));
   }
@@ -35,11 +38,14 @@ const addMoney = async (req, res, next) => {
   try {
     let user_id = req.user.data._id;
     const { amount } = req.body;
-    let result = await addMoneyDB(user_id, amount);
+    // if (amount <= 0) {
+    //   return next(Error(MESSAGES.AMOUNT_INVALID));
+    // }
+    let result = await updateWalletMoneyDB(user_id, amount);
     if (!result.status) {
       return next(Error(result.error));
     }
-    return res.status(200).json({ message: MESSAGES.ADD_MONEY_SUCCESS });
+    return res.status(200).json({ message: MESSAGES.UPDATE_MONEY_SUCCESS });
   } catch (error) {
     return next(Error(error.message));
   }
