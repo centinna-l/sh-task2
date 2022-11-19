@@ -4,7 +4,7 @@
 - npm run dev (Install nodemon - npm install nodemon -g)
 - API Documentation
 
-  - https://api.postman.com/collections/6244901-f673a95a-eea0-4d28-971d-7bdea7db1ad9?access_key=PMAT-01GJ81TWHZR40S28N29FWTM61W
+  - https://drive.google.com/drive/folders/1CC7gOFPXR46-D7x7hbf0uSy7Qza1zf-f?usp=share_link
 
 - Sockets
 
