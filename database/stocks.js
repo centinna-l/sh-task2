@@ -2,6 +2,7 @@ const { MESSAGES } = require("../helper/messages");
 const Stock = require("../models/stock");
 const Wallet = require("../models/wallet");
 const { fetchPortfolioDB, updatePortfolioDB } = require("./portfolio");
+const { fetchWalletDetailsDB, updateWalletMoneyDB } = require("./wallet");
 
 const createStockDB = async (
   name,
@@ -11,7 +12,6 @@ const createStockDB = async (
   status = true
 ) => {
   try {
-    console.log("Name", name);
     let checkStock = await fetchStockByFieldDB({ stock: name.trim() });
     if (checkStock.status) {
       return { status: false, error: MESSAGES.STOCK_FOUND };
@@ -71,6 +71,7 @@ const fetchStockByIdDB = async (sid) => {
 
 const updateStockDB = async (sid, data) => {
   try {
+    console.log("update stock db", data[0]);
     if (data.count) {
       let fetchStock = await fetchStockByIdDB(sid);
       if (!fetchStock.status) {
@@ -94,23 +95,53 @@ const updateStockDB = async (sid, data) => {
 
 const purchaseStock = async (user_id, stock_id, count) => {
   try {
-    let fetchStock = await fetchStockByIdDB(stock_id).exec();
+    /**
+     * Fetch stock details
+     */
+    let fetchStock = await fetchStockByIdDB(stock_id);
     if (!fetchStock.status || !fetchStock.data.status) {
       return { status: false, error: MESSAGES.STOCK_NOT_FOUND };
     }
+    console.log("Check count", parseInt(count), fetchStock.data.count);
     if (parseInt(count) > fetchStock.data.count) {
       return { status: false, error: MESSAGES.STOCK_PURCHASE_FAILED };
     }
-    let fetchWallet = await fetchWallet;
+    /**
+     * Fetch wallet details
+     */
+    let fetchWallet = await fetchWalletDetailsDB(user_id);
+    if (!fetchWallet.status) {
+      return { status: false, error: MESSAGES.FETCH_WALLET_FAILED };
+    }
+    let prevwallet = parseInt(fetchWallet.data.wallet);
+
+    if (
+      parseInt(count) * parseFloat(fetchStock.data.current_price) >
+      fetchWallet.data.wallet
+    ) {
+      return { status: false, error: MESSAGES.INSUFFICIENT_FUNDS };
+    }
+    //Update happening here - wallet
+    let amount = -(
+      parseInt(Math.abs(count)) * parseFloat(fetchStock.data.current_price)
+    );
+    let updateWallet = await updateWalletMoneyDB(user_id, amount);
+    if (!updateWallet.status) {
+      return { status: false, error: updateWallet.error };
+    }
     let prevStockCount = parseInt(fetchStock.data.count);
     let stock = {
       ...fetchStock.data,
       count: fetchStock.data.count + parseInt(count),
     };
-    //Update happening here
-    let updateStock = await updateStockDB(stock_id, stock);
+    console.log("stock", fetchStock.data._id);
+    //Update happening here - stocks
+    let updateStock = await updateStockDB(stock_id, {
+      count: fetchStock.data.count + parseInt(count),
+    });
     if (!updateStock.status) {
-      return { status: false, error: MESSAGES.STOCK_PURCHASE_FAILED };
+      let updatewallet = await updateWalletMoneyDB(user_id, prevwallet, true);
+      return { status: false, error: updateStock.error };
     }
     /**
      *
@@ -124,6 +155,7 @@ const purchaseStock = async (user_id, stock_id, count) => {
         ...fetchStock.data,
         count: prevStockCount,
       };
+      let updatewallet = await updateWalletMoneyDB(user_id, prevwallet, true);
       let update = await updateStockDB(stock_id, stock);
       return { status: false, error: fetchPortfolio.error };
     }
@@ -134,12 +166,13 @@ const purchaseStock = async (user_id, stock_id, count) => {
         count: prevStockCount,
       };
       let update = await updateStockDB(stock_id, stock);
+      let updatewallet = await updateWalletMoneyDB(user_id, prevwallet, true);
       return { status: false, error: MESSAGES.INTERNAL_SERVER_ERROR };
     }
     if (shares.length == 0) {
       shares.push({
         sid: stock_id,
-        count,
+        count: parseInt(Math.abs(count)),
         buying_price: fetchStock.data.current_price,
         selling_price: null,
         status: true,
@@ -147,24 +180,31 @@ const purchaseStock = async (user_id, stock_id, count) => {
       });
       let update = await updatePortfolioDB(user_id, shares);
       if (!update.status) {
+        let stock = {
+          ...fetchStock.data,
+          count: prevStockCount,
+        };
+        let update = await updateStockDB(stock_id, stock);
+        let updatewallet = await updateWalletMoneyDB(user_id, prevwallet, true);
         return { status: false, error: update.error };
       }
       return { status: true, data: update.data };
     }
     // get the stock and update it here
     for (let i = 0; i < shares.length; i++) {
-      if (shares[i]["sid"] == sid) {
-        shares[i]["count"] = shares[i]["count"] + parseInt(count);
+      if (shares[i]["sid"] == stock_id) {
+        shares[i]["count"] = shares[i]["count"] + parseInt(Math.abs(count));
       }
     }
-    let result = await updatePortfolioDB(shares);
+    let result = await updatePortfolioDB(user_id, shares);
     if (!result.status) {
       let stock = {
         ...fetchStock.data,
         count: prevStockCount,
       };
       let update = await updateStockDB(stock_id, stock);
-      return { status: false, error: MESSAGES.UNABLE_TO_UPDATE_PORTFOLIO };
+      let updatewallet = await updateWalletMoneyDB(user_id, prevwallet, true);
+      return { status: false, error: result.error };
     }
     return { status: true, data: result };
   } catch (error) {

@@ -40,10 +40,12 @@ const fetchPortfolioDB = async (user_id) => {
 
 const updatePortfolioDB = async (user_id, data) => {
   try {
+    console.log("data", data);
     let result = await Portfolio.findOneAndUpdate(
       { user_id },
-      { $set: data }
+      { $set: { shares: data } }
     ).exec();
+    console.log(result);
     if (!result) {
       return { status: false, error: MESSAGES.UNABLE_TO_UPDATE_PORTFOLIO };
     }

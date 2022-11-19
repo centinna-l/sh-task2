@@ -43,13 +43,13 @@ const deleteStocks = async (req, res, next) => {
 const buyStocks = async (req, res, next) => {
   try {
     let sid = req.params.sid;
-    if (ObjectId.isValid(sid)) {
+    if (!ObjectId.isValid(sid)) {
       return next(Error("Invalid Stock"));
     }
     const { count } = req.body;
     let result = await purchaseStock(req.user.data._id, sid, count);
     if (!result.status) {
-      return next(Error("Unable to purchase stocks"));
+      return next(Error(result.error));
     }
     return res.status(200).json({ message: "Stock purchased" });
   } catch (error) {

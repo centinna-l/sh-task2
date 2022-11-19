@@ -32,6 +32,7 @@ const MESSAGES = {
   UNABLE_TO_UPDATE_PORTFOLIO: "Unable to update Portfolio",
   INVALID_STOCK_AMOUNT: "Invalid amount of stock",
   INTERNAL_SERVER_ERROR: "Internal Server Error",
+  INSUFFICIENT_FUNDS: "Insufficient funds",
 };
 
 module.exports = { MESSAGES };
