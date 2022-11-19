@@ -1,7 +1,8 @@
 require("dotenv").config();
 
-const app = require("./app");
-const httpServer = require("http").createServer(app);
+// const app = require("./app");
+const httpServer = require("./socket");
+// const httpServer = require("http").createServer(app);
 const PORT = process.env.PORT || 8000;
 require("./helper/db");
 
