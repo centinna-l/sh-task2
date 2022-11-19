@@ -1,0 +1,5 @@
+- Stock market Trading
+- git clone
+- npm install
+- API Documentation
+  - https://api.postman.com/collections/6244901-f673a95a-eea0-4d28-971d-7bdea7db1ad9?access_key=PMAT-01GJ81TWHZR40S28N29FWTM61W
