@@ -19,11 +19,19 @@ const MESSAGES = {
   UPDATE_MONEY_FAILURE: "Unable to update Amount",
   STOCK_CREATE_FAILURE: "Unable to create Stock",
   STOCK_CREATE_SUCCESS: "Stock created Successfully",
+  STOCK_UPDATE_SUCCESS: "Stock Updated Successfully",
   STOCK_NOT_FOUND: "Stock not found",
   STOCK_FOUND: "Stock Found",
   STOCK_PURCHASE_FAILED: "Cannot purchase stock",
   AMOUNT_INVALID: "Please enter a valid amount",
   FETCH_WALLET_FAILED: "Unable to fetch wallet",
+  ACTIVATE_PORTFOLIO_FAILURE: "Unable to activate portfolio",
+  ACTIVATE_PORTFOLIO_SUCCESS: "Portfolio Activated Successfully",
+  PORTFOLIO_UPDATE_SUCCESS: "Portfolio updated Successfully",
+  UNABLE_TO_FETCH_PORTFOLIO: "Unable to fetch Portfolio",
+  UNABLE_TO_UPDATE_PORTFOLIO: "Unable to update Portfolio",
+  INVALID_STOCK_AMOUNT: "Invalid amount of stock",
+  INTERNAL_SERVER_ERROR: "Internal Server Error",
 };
 
 module.exports = { MESSAGES };

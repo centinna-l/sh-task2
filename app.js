@@ -14,9 +14,13 @@ app.use(express.json());
 //Routes
 const authRoutes = require("./routes/auth_routes");
 const walletRoutes = require("./routes/wallet_routes");
+const portfolioRoutes = require("./routes/portfolio_routes");
+const stockRoutes = require("./routes/stock_routes");
 //Import Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/wallet", walletRoutes);
+app.use("/api/portfolio", portfolioRoutes);
+app.use("/api/stocks", stockRoutes);
 
 app.use((err, req, res, next) => {
   return res.status(400).json({ error: err.message });
